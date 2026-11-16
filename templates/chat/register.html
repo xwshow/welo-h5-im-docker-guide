@@ -1,14 +1,60 @@
 {% extends "base.html" %}
 {% block title %}注册{% endblock %}
 {% block content %}
-<header class="navbar"><h1>注册</h1></header>
-<form method="post" class="sheet">
+<header class="navbar">
+  <a class="nav-left" href="{% url 'login' %}">返回</a>
+  <h1>注册</h1>
+</header>
+
+<form method="post" class="auth-form" novalidate>
   {% csrf_token %}
-  {{ form.non_field_errors }}
-  <label>账号 {{ form.username }}</label>
-  <label>密码 {{ form.password1 }}</label>
-  <label>确认密码 {{ form.password2 }}</label>
-  <button type="submit" class="btn">注册</button>
+
+  {% if form.non_field_errors %}
+    <div class="auth-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="auth-field">
+    <label for="{{ form.username.id_for_label }}">账号</label>
+    {{ form.username }}
+    {% if form.username.errors %}<p class="field-error">{{ form.username.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="auth-field">
+    <label for="{{ form.password1.id_for_label }}">密码</label>
+    <div class="auth-password">
+      {{ form.password1 }}
+      <button type="button" class="pwd-toggle" data-target="{{ form.password1.id_for_label }}" aria-label="显示密码">显示</button>
+    </div>
+    {% if form.password1.errors %}<p class="field-error">{{ form.password1.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="auth-field">
+    <label for="{{ form.password2.id_for_label }}">确认密码</label>
+    <div class="auth-password">
+      {{ form.password2 }}
+      <button type="button" class="pwd-toggle" data-target="{{ form.password2.id_for_label }}" aria-label="显示密码">显示</button>
+    </div>
+    {% if form.password2.errors %}<p class="field-error">{{ form.password2.errors.0 }}</p>{% endif %}
+  </div>
+
+  <button type="submit" class="btn auth-submit">注册</button>
 </form>
-<p class="hint"><a href="{% url 'login' %}">已有账号？登录</a></p>
+
+<p class="hint"><a href="{% url 'login' %}">已有账号？去登录</a></p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  document.querySelectorAll(".pwd-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var input = document.getElementById(btn.getAttribute("data-target"));
+      if (!input) return;
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "隐藏" : "显示";
+    });
+  });
+})();
+</script>
 {% endblock %}

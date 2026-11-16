@@ -2,12 +2,47 @@
 {% block title %}登录{% endblock %}
 {% block content %}
 <header class="navbar"><h1>登录</h1></header>
-<form method="post" class="sheet">
+
+<form method="post" class="auth-form" novalidate>
   {% csrf_token %}
-  {{ form.non_field_errors }}
-  <label>账号 {{ form.username }}</label>
-  <label>密码 {{ form.password }}</label>
-  <button type="submit" class="btn">登录</button>
+
+  {% if form.non_field_errors %}
+    <div class="auth-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="auth-field">
+    <label for="{{ form.username.id_for_label }}">账号</label>
+    {{ form.username }}
+    {% if form.username.errors %}<p class="field-error">{{ form.username.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="auth-field">
+    <label for="{{ form.password.id_for_label }}">密码</label>
+    <div class="auth-password">
+      {{ form.password }}
+      <button type="button" class="pwd-toggle" data-target="{{ form.password.id_for_label }}" aria-label="显示密码">显示</button>
+    </div>
+    {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
+  </div>
+
+  <button type="submit" class="btn auth-submit">登录</button>
 </form>
-<p class="hint"><a href="{% url 'register' %}">没有账号？注册</a></p>
+
+<p class="hint"><a href="{% url 'register' %}">没有账号？去注册</a></p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  document.querySelectorAll(".pwd-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var input = document.getElementById(btn.getAttribute("data-target"));
+      if (!input) return;
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "隐藏" : "显示";
+    });
+  });
+})();
+</script>
 {% endblock %}
