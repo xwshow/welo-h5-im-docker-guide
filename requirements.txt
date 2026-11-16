@@ -1,5 +1,6 @@
-Django>=5.1,<5.3
-channels>=4.2,<5
-daphne>=4.1,<5
-channels-redis>=4.2,<5
-redis>=5,<9
+# Pin to current stable minors (as of 2026-11). Upper bounds keep upgrades safe.
+Django>=5.2.19,<5.3
+channels>=4.3.2,<5
+daphne>=4.2.3,<5
+channels-redis>=4.3.0,<5
+redis>=5.2,<9
