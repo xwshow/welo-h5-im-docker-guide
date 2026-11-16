@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ other.username }}{% endblock %}
+{% block content %}
+<header class="navbar">
+  <a class="nav-left" href="{% url 'inbox' %}">返回</a>
+  <h1>{{ other.username }}</h1>
+</header>
+<main id="msg-list" class="messages"
+      data-thread-id="{{ thread.id }}"
+      data-self-id="{{ request.user.id }}"
+      data-history-url="{% url 'thread_history' thread.id %}">
+  {% for m in messages %}
+    <div class="bubble {% if m.sender_id == request.user.id %}mine{% else %}theirs{% endif %}" data-id="{{ m.id }}">
+      <p>{{ m.body }}</p>
+    </div>
+  {% endfor %}
+</main>
+<footer class="composer">
+  <input id="msg-input" type="text" maxlength="2000" placeholder="输入消息" autocomplete="off">
+  <button id="msg-send" type="button" class="btn-mini">发送</button>
+</footer>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'chat/chat.js' %}"></script>
+{% endblock %}
