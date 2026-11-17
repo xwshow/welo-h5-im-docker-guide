@@ -108,6 +108,14 @@ proxy_buffering off;       # 关闭代理缓冲，确保实时消息帧零延迟
 - 🌐 产品官网与在线体验：[WeloIM 轻量级 H5 即时通讯平台](https://www.weloim.com/)
 - 🏢 独立部署与源码授权：[WeloIM 企业级私有化部署方案](https://www.weloim.com/solutions/private-deployment/)
 
+## ❓ 常见问题与排错 (FAQ)
+
+**Q：本地 WebSocket 正常，上线后浏览器报 `WebSocket connection failed` 或 Nginx `400 Bad Request`？**  
+A：多半是反代没透传 `Upgrade` / `Connection`，或 HTTPS 站点仍用 `ws://`（应改为 `wss://`）。对照 [`nginx/im-websocket.conf`](nginx/im-websocket.conf)，确认 `proxy_http_version 1.1` 与 `$connection_upgrade` 已生效。
+
+**Q：iOS Safari 收不到 PWA 推送？**  
+A：iOS 16.4+ 才支持 Web Push，且用户必须先「分享 → 添加到主屏幕」安装 PWA 后，才会出现通知权限弹窗；普通标签页内无法稳定订阅。
+
 ## 📄 License
 
 本项目基于 [MIT License](LICENSE) 开源，您可以自由用于学习研究、二次开发或作为生产环境的服务器配置参考。
